@@ -1,8 +1,9 @@
 // PlayerTable.js
 import React from 'react';
 import './MyTable.css'
+import PlayerRowComponent from './PlayerRowComponent';
 
-const PlayerTable = ({ rowData }) => {
+const PlayerTable = ({ rowData, onAverageUpdate }) => {
   if (!rowData || rowData.length === 0) {
     return <div>Loading...</div>; // Display a loading message or component
   }
@@ -14,19 +15,11 @@ const PlayerTable = ({ rowData }) => {
           <th>Name</th>
           <th>Age</th>
           <th>Average</th>
-          <th>Draft</th>
-          <th>Drafted</th>
         </tr>
       </thead>
       <tbody>
         {rowData.map((row, index) => (
-          <tr key={index}>
-            <td>{row.name}</td>
-            <td>{row.age}</td>
-            <td>{row.average}</td>
-            <td><button>Draft</button></td>
-            <td><button>Remove</button></td>
-          </tr>
+          <PlayerRowComponent key={index} data={row} onAverageUpdate={onAverageUpdate} />
         ))}
       </tbody>
     </table>

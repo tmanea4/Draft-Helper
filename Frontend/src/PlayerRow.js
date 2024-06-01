@@ -1,6 +1,7 @@
 // PlayerRow.js
 class PlayerRow {
-  constructor(name, age, average) {
+  constructor(id, name, age, average) {
+    this.id = id;
     this.name = name;
     this.age = age;
     this.average = average;
