@@ -58,14 +58,14 @@ app.put('/api/rows/:id', (req, res) => {
   }
 
   // Validate the column name to prevent SQL injection
-  const validColumns = ['average', 'predicted', 'ignored']; // Add any other valid columns here
+  const validColumns = ['predicted', 'ignored']; // Add any other valid columns here
   const column = Object.keys(updates)[0]; // Assuming only one key-value pair is sent
   const value = updates[column];
 
   if (!validColumns.includes(column)) {
     return res.status(400).json({ error: 'Invalid column name' });
   }
-
+  
   // Construct the query dynamically
   const query = `UPDATE players SET ${column} = ? WHERE id = ?`;
   connection.query(query, [value, id], (err, results) => {

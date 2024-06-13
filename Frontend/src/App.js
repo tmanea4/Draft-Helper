@@ -69,6 +69,7 @@ const App = () => {
   return (
     <div>
       <h1>Player Data Table</h1>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onIgnoreUpdate={handleIgnoreUpdate} />
     </div>
   );
