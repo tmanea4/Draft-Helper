@@ -46,6 +46,29 @@ app.get('/api/rows', (req, res) => {
   });
 });
 
+const averageQuery = `
+  SELECT AVG(predicted) AS average_predicted
+  FROM (
+    SELECT predicted
+    FROM players
+    ORDER BY predicted DESC
+    LIMIT 8
+  ) AS highest_predicted;
+`;
+
+app.get('/api/average-predicted', (req, res) => {
+  connection.query(averageQuery, (error, results, fields) => {
+    if (error) {
+      console.error('Error fetching data:', error);
+      // Handle error
+    } else {
+      const averagePredicted = results[0].average_predicted;
+      console.log('Average of highest 8 predicted values:', averagePredicted);
+      res.status(200).json({ average_predicted: averagePredicted });
+    }
+  });
+});
+
 app.put('/api/rows/:id', (req, res) => {
   const { id } = req.params;
   const updates = req.body;

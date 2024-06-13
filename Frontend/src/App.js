@@ -14,6 +14,7 @@ const App = () => {
   const [rowData, setRowData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [averagePredicted, setAveragePredicted] = useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -38,6 +39,7 @@ const App = () => {
       setRowData(prevData =>
         prevData.map(row => (row.id === id ? { ...row, predicted: newPredicted } : row))
       );
+      fetchAveragePredicted();
     } catch (error) {
       console.error('Error updating average:', error);
       setError('Failed to update average. Please try again later.');
@@ -53,10 +55,27 @@ const App = () => {
       setRowData(prevData =>
         prevData.map(row => (row.id === id ? { ...row, ignored: newIgnore } : row))
       );
+      fetchAveragePredicted();
     } catch (error) {
       console.error('Error updating ignore:', error);
     }
   };
+
+  const fetchAveragePredicted = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/average-predicted');
+      const average = response.data.average_predicted;
+      console.log('Average of highest 8 predicted values (from frontend):', average);
+      setAveragePredicted(average);
+    } catch (error) {
+      console.error('Error fetching average predicted:', error);
+    }
+  };
+
+  // Fetch data when component mounts
+  useEffect(() => {
+    fetchAveragePredicted();
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -69,6 +88,7 @@ const App = () => {
   return (
     <div>
       <h1>Player Data Table</h1>
+      <p>{averagePredicted}</p>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onIgnoreUpdate={handleIgnoreUpdate} />
     </div>
