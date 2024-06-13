@@ -3,7 +3,6 @@ import express from 'express';
 import { createConnection } from 'mysql2';
 import cors from 'cors';
 
-
 const app = express();
 const port = 3001;
 
@@ -16,12 +15,15 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+import dotenv from 'dotenv';
+dotenv.config();
+
 // Create a connection to the database
 const connection = createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'admin',
-  database: 'aflstats'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 });
 
 // Connect to the database
@@ -46,21 +48,27 @@ app.get('/api/rows', (req, res) => {
 
 app.put('/api/rows/:id', (req, res) => {
   const { id } = req.params;
+  const updates = req.body;
+  
+  console.log('Request Body:', updates);
 
-  console.log(req.body);
-
-  const { average } = req.body;
-
-  if (average === undefined) {
-    return res.status(400).json({ error: 'Average is required' });
+  // Check if there's at least one key-value pair in the request body
+  if (Object.keys(updates).length === 0) {
+    return res.status(400).json({ error: 'Update data is required' });
   }
 
-  if (!id || !average) {
-    return res.status(400).json({ error: 'ID and average are required' });
+  // Validate the column name to prevent SQL injection
+  const validColumns = ['average', 'predicted', 'ignored']; // Add any other valid columns here
+  const column = Object.keys(updates)[0]; // Assuming only one key-value pair is sent
+  const value = updates[column];
+
+  if (!validColumns.includes(column)) {
+    return res.status(400).json({ error: 'Invalid column name' });
   }
 
-  const query = 'UPDATE players SET average = ? WHERE id = ?';
-  connection.query(query, [average, id], (err, results) => {
+  // Construct the query dynamically
+  const query = `UPDATE players SET ${column} = ? WHERE id = ?`;
+  connection.query(query, [value, id], (err, results) => {
     if (err) {
       console.error('Error updating data:', err); // Log the error
       res.status(500).send(err);

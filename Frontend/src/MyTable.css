@@ -1,6 +1,7 @@
 .my-table {
     border-collapse: collapse; /* Collapse table borders to avoid double borders */
-    width: 100%; /* Optional: Set table width to 100% of its container */
+    margin-left: 1%;
+    width: 60%;
   }
   
   .my-table th,
