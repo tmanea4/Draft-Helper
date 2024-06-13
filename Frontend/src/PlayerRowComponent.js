@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
   const [predicted, setPredicted] = useState(data.predicted);
-  const [ignore, setIgnore] = useState(data.ignore);
+  const [ignored, setIgnore] = useState(data.ignored);
 
   const handlePredictedChange = (e) => {
     setPredicted(e.target.value);
@@ -47,7 +47,7 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
       <td>
         <input
           type="checkbox"
-          checked={ignore === 1}
+          checked={ignored === 1}
           onChange={handleIgnoreChange}
         />
       </td>
