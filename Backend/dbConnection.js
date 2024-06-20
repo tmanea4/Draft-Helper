@@ -56,6 +56,7 @@ const averageQuery = `
   ) AS highest_predicted;
 `;
 
+/* Get Averages */
 app.get('/api/average-predicted', (req, res) => {
   connection.query(averageQuery, (error, results, fields) => {
     if (error) {
@@ -69,6 +70,73 @@ app.get('/api/average-predicted', (req, res) => {
   });
 });
 
+const queryPromise = (query, values) => {
+  return new Promise((resolve, reject) => {
+    connection.query(query, values, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
+    });
+  });
+};
+
+app.get('/api/averages/def/:def/mid/:mid/ruc/:ruc/fwd/:fwd', async (req, res) => {
+  const { def, mid, ruc, fwd } = req.params;
+
+  console.log('def is:', def, 'mid is:', mid, 'ruc is:', ruc, 'fwd is:', fwd);
+
+  const averages = {
+    def: 0,
+    fwd: 0,
+    mid: 0,
+    ruc: 0
+  };  
+
+  const query = `
+    SELECT AVG(predicted) AS average_predicted
+    FROM (
+      SELECT predicted
+      FROM players
+      WHERE position LIKE ?
+      ORDER BY predicted DESC
+      LIMIT ?
+    ) AS highest_predicted;
+  `;
+
+  const defValues = [`%def%`, parseInt(def)];
+  const midValues = [`%mid%`, parseInt(mid)];
+  const rucValues = [`%ruc%`, parseInt(ruc)];
+  const fwdValues = [`%fwd%`, parseInt(fwd)];
+
+  try {
+    const defResults = await queryPromise(query, defValues);
+    averages.def = defResults[0].average_predicted;
+    console.log('Average of highest', def, 'def predicted values:', averages.def);
+
+    const midResults = await queryPromise(query, midValues);
+    averages.mid = midResults[0].average_predicted;
+    console.log('Average of highest', mid, 'mid predicted values:', averages.mid);
+
+    const rucResults = await queryPromise(query, rucValues);
+    averages.ruc = rucResults[0].average_predicted;
+    console.log('Average of highest', ruc, 'ruck predicted values:', averages.ruc);
+
+    const fwdResults = await queryPromise(query, fwdValues);
+    averages.fwd = fwdResults[0].average_predicted;
+    console.log('Average of highest', fwd, 'forward predicted values:', averages.fwd);
+
+    console.log(averages.def, averages.mid, averages.ruc, averages.fwd);
+    
+    res.status(200).json(averages);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ error: 'Error fetching data' });
+  }
+});
+
+
+/* Put Predicted */
 app.put('/api/rows/:id', (req, res) => {
   const { id } = req.params;
   const updates = req.body;
@@ -103,7 +171,7 @@ app.put('/api/rows/:id', (req, res) => {
   });
 });
 
-// Start the server
+/* Start the server */
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

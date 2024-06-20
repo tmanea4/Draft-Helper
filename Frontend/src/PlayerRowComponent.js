@@ -1,7 +1,7 @@
 // PlayerRowComponent.js
 import React, { useState } from 'react';
 
-const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
+const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate, averages }) => {
   const [predicted, setPredicted] = useState(data.predicted);
   const [ignored, setIgnore] = useState(data.ignored);
 

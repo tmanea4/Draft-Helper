@@ -14,7 +14,7 @@ const App = () => {
   const [rowData, setRowData] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [averagePredicted, setAveragePredicted] = useState(0);
+  const [averagePredicted, setAveragePredicted] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -66,6 +66,11 @@ const App = () => {
       const response = await axios.get('http://localhost:3001/api/average-predicted');
       const average = response.data.average_predicted;
       console.log('Average of highest 8 predicted values (from frontend):', average);
+
+      const response2 = await axios.get('http://localhost:3001/api/averages/def/6/mid/8/ruc/1/fwd/6');
+      const average2 = response2.data;
+      console.log(average2)
+
       setAveragePredicted(average);
     } catch (error) {
       console.error('Error fetching average predicted:', error);

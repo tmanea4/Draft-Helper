@@ -61,7 +61,7 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate}) => {
       </thead>
       <tbody>
         {sortedData.map((row, index) => (
-          <PlayerRowComponent key={index} data={row} onPredictedUpdate={onPredictedUpdate} onIgnoreUpdate={onIgnoreUpdate} />
+          <PlayerRowComponent key={index} data={row} onPredictedUpdate={onPredictedUpdate} onIgnoreUpdate={onIgnoreUpdate}  />
         ))}
       </tbody>
     </table>
