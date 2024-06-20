@@ -70,8 +70,8 @@ const App = () => {
       const response2 = await axios.get('http://localhost:3001/api/averages/def/6/mid/8/ruc/1/fwd/6');
       const average2 = response2.data;
       console.log(average2)
-
-      setAveragePredicted(average);
+      
+      setAveragePredicted(average2);
     } catch (error) {
       console.error('Error fetching average predicted:', error);
     }
@@ -90,12 +90,16 @@ const App = () => {
     return <div>{error}</div>;
   }
 
+  if(!averagePredicted) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <h1>Player Data Table</h1>
-      <p>{averagePredicted}</p>
+      {averagePredicted && <p>{averagePredicted.def} {averagePredicted.mid} {averagePredicted.ruc} {averagePredicted.fwd}</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onIgnoreUpdate={handleIgnoreUpdate} />
+      <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onIgnoreUpdate={handleIgnoreUpdate} averages={averagePredicted} />
     </div>
   );
 };

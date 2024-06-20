@@ -84,8 +84,6 @@ const queryPromise = (query, values) => {
 app.get('/api/averages/def/:def/mid/:mid/ruc/:ruc/fwd/:fwd', async (req, res) => {
   const { def, mid, ruc, fwd } = req.params;
 
-  console.log('def is:', def, 'mid is:', mid, 'ruc is:', ruc, 'fwd is:', fwd);
-
   const averages = {
     def: 0,
     fwd: 0,
@@ -112,19 +110,15 @@ app.get('/api/averages/def/:def/mid/:mid/ruc/:ruc/fwd/:fwd', async (req, res) =>
   try {
     const defResults = await queryPromise(query, defValues);
     averages.def = defResults[0].average_predicted;
-    console.log('Average of highest', def, 'def predicted values:', averages.def);
 
     const midResults = await queryPromise(query, midValues);
     averages.mid = midResults[0].average_predicted;
-    console.log('Average of highest', mid, 'mid predicted values:', averages.mid);
 
     const rucResults = await queryPromise(query, rucValues);
     averages.ruc = rucResults[0].average_predicted;
-    console.log('Average of highest', ruc, 'ruck predicted values:', averages.ruc);
 
     const fwdResults = await queryPromise(query, fwdValues);
     averages.fwd = fwdResults[0].average_predicted;
-    console.log('Average of highest', fwd, 'forward predicted values:', averages.fwd);
 
     console.log(averages.def, averages.mid, averages.ruc, averages.fwd);
     

@@ -1,9 +1,12 @@
 // PlayerRowComponent.js
 import React, { useState } from 'react';
+import calcRating from './RatingCalculator';
 
 const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate, averages }) => {
   const [predicted, setPredicted] = useState(data.predicted);
   const [ignored, setIgnore] = useState(data.ignored);
+
+    // console.log(averages)
 
   const handlePredictedChange = (e) => {
     setPredicted(e.target.value);
@@ -26,6 +29,9 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate, averages 
     setIgnore(newIgnoreValue);
   };
   
+  console.log('something')
+  const rating = calcRating(data.position, predicted, averages);
+
   return (
     <tr>
       <td>{data.name}</td>
@@ -51,7 +57,7 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate, averages 
           onChange={handleIgnoreChange}
         />
       </td>
-      <td>{predicted - 90}</td>
+      <td>{rating}</td>
     </tr>
   );  
 

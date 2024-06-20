@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import './MyTable.css'
 import PlayerRowComponent from './PlayerRowComponent';
 
-const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate}) => {
+const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) => {
   const [sortField, setSortField] = useState('rating');
   const [sortDirection, setSortDirection] = useState('desc');
 
@@ -61,7 +61,7 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate}) => {
       </thead>
       <tbody>
         {sortedData.map((row, index) => (
-          <PlayerRowComponent key={index} data={row} onPredictedUpdate={onPredictedUpdate} onIgnoreUpdate={onIgnoreUpdate}  />
+          <PlayerRowComponent key={index} data={row} onPredictedUpdate={onPredictedUpdate} onIgnoreUpdate={onIgnoreUpdate} averages={averages}  />
         ))}
       </tbody>
     </table>
