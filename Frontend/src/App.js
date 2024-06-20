@@ -63,15 +63,10 @@ const App = () => {
 
   const fetchAveragePredicted = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/average-predicted');
-      const average = response.data.average_predicted;
-      console.log('Average of highest 8 predicted values (from frontend):', average);
-
-      const response2 = await axios.get('http://localhost:3001/api/averages/def/6/mid/8/ruc/1/fwd/6');
-      const average2 = response2.data;
-      console.log(average2)
-      
-      setAveragePredicted(average2);
+      const response = await axios.get('http://localhost:3001/api/averages/def/6/mid/8/ruc/1/fwd/6');
+      const average = response.data;
+      setAveragePredicted(average);
+      fetchData();
     } catch (error) {
       console.error('Error fetching average predicted:', error);
     }

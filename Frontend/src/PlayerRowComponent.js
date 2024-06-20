@@ -29,7 +29,6 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate, averages 
     setIgnore(newIgnoreValue);
   };
   
-  console.log('something')
   const rating = calcRating(data.position, predicted, averages);
 
   return (
