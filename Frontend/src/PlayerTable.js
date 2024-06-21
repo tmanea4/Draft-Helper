@@ -8,12 +8,14 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) =>
   const [sortField, setSortField] = useState('rating');
   const [sortDirection, setSortDirection] = useState('desc');
 
+  /* Let's do some analysis on the data we have */
   rowData.forEach(data => {
     data.rating = calcRating(data.position, data.predicted, averages);
+    data.value = (data.predicted - data.pricedAt).toFixed(2);
   });
 
   const handleSort = (field) => {
-    const newSortDirection = sortField === field && sortDirection === 'asc' ? 'desc' : 'asc';
+    const newSortDirection = sortField === field && sortDirection === 'desc' ? 'asc' : 'desc';
     setSortField(field);
     setSortDirection(newSortDirection);
   };
@@ -75,6 +77,9 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) =>
         </th>
         <th onClick={() => handleSort('rating')}>
           Rating {sortField === 'rating' && (sortDirection === 'asc' ? '↑' : '↓')}
+        </th>
+        <th onClick={() => handleSort('value')}>
+          Value {sortField === 'value' && (sortDirection === 'asc' ? '↑' : '↓')}
         </th>
         </tr>
       </thead>

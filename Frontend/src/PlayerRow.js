@@ -12,6 +12,7 @@ class PlayerRow {
     this.drafted = drafted;
     this.ignored = ignored;
     this.rating = 0;
+    this.value = 0;
   }
 }
 

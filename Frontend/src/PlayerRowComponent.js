@@ -42,6 +42,8 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
      style = 'ignored_player';
   }
 
+
+
   return (
     <tr className = {style}>
       <td>{data.name}</td>
@@ -68,6 +70,7 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
         />
       </td>
       <td>{data.rating}</td>
+      <td>{data.value}</td>
     </tr>
   );  
 
