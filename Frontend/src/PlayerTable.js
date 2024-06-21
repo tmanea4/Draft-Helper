@@ -2,10 +2,15 @@
 import React, { useState } from 'react';
 import './MyTable.css'
 import PlayerRowComponent from './PlayerRowComponent';
+import calcRating from './RatingCalculator';
 
 const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) => {
   const [sortField, setSortField] = useState('rating');
   const [sortDirection, setSortDirection] = useState('desc');
+
+  rowData.forEach(data => {
+    data.rating = calcRating(data.position, data.predicted, averages);
+  });
 
   const handleSort = (field) => {
     const newSortDirection = sortField === field && sortDirection === 'asc' ? 'desc' : 'asc';
@@ -13,15 +18,29 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) =>
     setSortDirection(newSortDirection);
   };
 
-  const sortedData = [...rowData].sort((a, b) => {
-    if (a[sortField] < b[sortField]) return sortDirection === 'asc' ? -1 : 1;
-    if (a[sortField] > b[sortField]) return sortDirection === 'asc' ? 1 : -1;
-    return 0;
-  });
 
   if (!rowData || rowData.length === 0) {
     return <div>Loading...</div>; // Display a loading message or component
   }
+
+  const sortedData = [...rowData].sort((a, b) => {
+    const valueA = a[sortField];
+    const valueB = b[sortField];
+
+    const numA = parseFloat(valueA);
+    const numB = parseFloat(valueB);
+
+    const isNumA = !isNaN(numA);
+    const isNumB = !isNaN(numB);
+
+    if (isNumA && isNumB) {
+      return sortDirection === 'asc' ? numA - numB : numB - numA;
+    } else {
+      if (valueA < valueB) return sortDirection === 'asc' ? -1 : 1;
+      if (valueA > valueB) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    }
+  });
 
   return (
     <table className="my-table">
