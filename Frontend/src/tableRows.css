@@ -1,0 +1,15 @@
+.my_player {
+    background-color: rgb(77, 225, 109);
+}
+
+.available_player {
+    background-color: white;
+}
+
+.ignored_player {
+    background-color: lightgrey;
+}
+
+.taken_player { 
+    background-color: rgb(226, 100, 100);
+}

@@ -1,7 +1,7 @@
 .my-table {
     border-collapse: collapse; /* Collapse table borders to avoid double borders */
     margin-left: 1%;
-    width: 60%;
+    width: 70%;
   }
   
   .my-table th,
@@ -15,3 +15,10 @@
     background-color: #f2f2f2; /* Optional: Add background color to table headers */
   }
   
+.disabled_row {
+    background-color: #464242;
+}
+
+.enabled_row {
+    background-color: #ffffff;
+}

@@ -6,7 +6,7 @@ import PlayerRow from './PlayerRow';
 
 const fetchData = async () => {
   const response = await axios.get('http://localhost:3001/api/rows');
-  const data = response.data.map(row => new PlayerRow(row.id, row.name, row.age, row.average, row.predicted, row.price, row.pricedAt, row.position, row.drafted, row.ignored));
+  const data = response.data.map(row => new PlayerRow(row.id, row.name, row.age, row.average, row.predicted, row.price, row.position, row.drafted, row.ignored));
   return data;
 };
 
@@ -63,7 +63,7 @@ const App = () => {
 
   const fetchAveragePredicted = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/averages/def/6/mid/8/ruc/1/fwd/6');
+      const response = await axios.get('http://localhost:3001/api/averages/def/48/mid/64/ruc/8/fwd/48');
       const average = response.data;
       setAveragePredicted(average);
     } catch (error) {

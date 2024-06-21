@@ -96,7 +96,7 @@ app.get('/api/averages/def/:def/mid/:mid/ruc/:ruc/fwd/:fwd', async (req, res) =>
     FROM (
       SELECT predicted
       FROM players
-      WHERE position LIKE ?
+      WHERE position LIKE ? AND ignored != 1
       ORDER BY predicted DESC
       LIMIT ?
     ) AS highest_predicted;
