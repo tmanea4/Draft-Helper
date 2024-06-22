@@ -9,7 +9,9 @@ class PlayerRow {
     this.price = price;
     this.pricedAt = (price/8773).toFixed(2);
     this.position = position
-    this.drafted = drafted;
+    this.available = drafted === 0 ? true : false;
+    this.drafted = drafted === 1 ? true : false;
+    this.taken = drafted >= 2 ? true : false;
     this.ignored = ignored;
     this.rating = 0;
     this.value = 0;

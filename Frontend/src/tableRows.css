@@ -13,3 +13,7 @@
 .taken_player { 
     background-color: rgb(226, 100, 100);
 }
+
+.pred_input {
+    width: 58px;
+}

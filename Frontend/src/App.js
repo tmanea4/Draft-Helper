@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PlayerTable from './PlayerTable';
 import PlayerRow from './PlayerRow';
+import PositionAverageTable from './PositionAverageTable';
+import DraftList from './DraftList';
+import './App.css';
 
 const fetchData = async () => {
   const response = await axios.get('http://localhost:3001/api/rows');
@@ -71,7 +74,6 @@ const App = () => {
     }
   };
 
-  // Fetch data when component mounts
   useEffect(() => {
     fetchAveragePredicted();
   }, []);
@@ -89,14 +91,16 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h1>Player Data Table</h1>
-      {averagePredicted && <p>def: {averagePredicted.def}</p>}
-      {averagePredicted && <p>mid: {averagePredicted.mid}</p>}
-      {averagePredicted && <p>ruc: {averagePredicted.ruc}</p>}
-      {averagePredicted && <p>fwd: {averagePredicted.fwd}</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onIgnoreUpdate={handleIgnoreUpdate} averages={averagePredicted} />
+    <div className = 'background'>
+      <div className='nav-bar'>Draft Helper</div>
+      <PositionAverageTable positionAverages={averagePredicted} />     
+      <div className="tables-container">
+        <div></div>
+        <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onIgnoreUpdate={handleIgnoreUpdate} averages={averagePredicted} />
+        <div></div>
+        <DraftList positionAverages={averagePredicted} />    
+        <div></div> 
+      </div>
     </div>
   );
 };

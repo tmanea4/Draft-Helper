@@ -24,6 +24,7 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
 
   const handleIgnoreChange = async (e) => {
     const newIgnoreValue = e.target.checked ? 1 : 0;
+    data.ignored = newIgnoreValue;
     onIgnoreUpdate(data.id, newIgnoreValue);
     setIgnore(newIgnoreValue);
   };
@@ -42,8 +43,6 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
      style = 'ignored_player';
   }
 
-
-
   return (
     <tr className = {style}>
       <td>{data.name}</td>
@@ -51,6 +50,7 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
       <td>{data.average}</td>
       <td>
         <input
+          className='pred_input'
           type="number"
           value={data.predicted}
           onChange={handlePredictedChange}
@@ -61,11 +61,12 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
       <td>{data.price / 1000}</td>
       <td>{data.pricedAt}</td>
       <td>{data.position}</td>
-      <td>{data.drafted ? 'yes' : 'no'}</td>
+      <td><button>{data.drafted ? 'Undraft' : 'Draft'}</button></td>
+      <td><button>{data.drafted ? 'Undo' : 'Taken'}</button></td>
       <td>
         <input
           type="checkbox"
-          checked={ignored === 1}
+          checked={data.ignored === 1}
           onChange={handleIgnoreChange}
         />
       </td>

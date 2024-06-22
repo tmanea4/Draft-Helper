@@ -14,6 +14,8 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) =>
     data.value = (data.predicted - data.pricedAt).toFixed(2);
   });
 
+  // rowData = rowData.filter(data => data.ignored === 0);
+
   const handleSort = (field) => {
     const newSortDirection = sortField === field && sortDirection === 'desc' ? 'asc' : 'desc';
     setSortField(field);
@@ -45,7 +47,7 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) =>
   });
 
   return (
-    <table className="my-table">
+    <table className="player-table">
       <thead>
         <tr>
         <th onClick={() => handleSort('name')}>
@@ -71,6 +73,9 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) =>
         </th>
         <th onClick={() => handleSort('draft')}>
           Draft {sortField === 'draft' && (sortDirection === 'asc' ? '↑' : '↓')}
+        </th>
+        <th onClick={() => handleSort('taken')}>
+          Taken {sortField === 'taken' && (sortDirection === 'asc' ? '↑' : '↓')}
         </th>
         <th onClick={() => handleSort('ignore')}>
           Ignore {sortField === 'ignore' && (sortDirection === 'asc' ? '↑' : '↓')}
