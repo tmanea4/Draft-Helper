@@ -1,24 +1,41 @@
 import './DraftList.css';
 
-const DraftList = ({ positionAverages }) => {
+
+const DraftList = ({ rowData }) => {
+
+    
+
+
     return (
         <div>
             <table className='draft-table'>
                 <thead>
                     <tr>
-                        <th>Defender</th>
-                        <th>Midfield</th>    
-                        <th>Ruck</th>
-                        <th>Forward</th>
+                        <th className='draft-table-header'>Drafted Team</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{positionAverages.def.toFixed(2)}</td>
-                        <td>{positionAverages.mid.toFixed(2)}</td>
-                        <td>{positionAverages.ruc.toFixed(2)}</td>
-                        <td>{positionAverages.fwd.toFixed(2)}</td>
+                        <th>Defend</th>
                     </tr>
+                    <tr>
+                        <td>Midfielder 1</td>
+                    </tr>
+                    <tr>
+                        <td>Midfielder 1</td>
+                    </tr>
+                    <tr>
+                        <td>Midfielder 1</td>
+                    </tr>
+                    <tr>
+                        <th>Midfield</th>
+                    </tr>
+                    <tr>
+                        <th>Ruck</th>
+                    </tr>
+                    <tr>
+                        <th>Forward</th>
+                    </tr>               
                 </tbody>
             </table>
         </div>

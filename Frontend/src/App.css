@@ -17,7 +17,7 @@
 
 .tables-container {
   display: grid;
-  grid-template-columns: 1% 70% 1% 15% 1%;
+  grid-template-columns: 1% 70% 1% 27% 1%;
   gap: 0;
   width: 100%;
 }

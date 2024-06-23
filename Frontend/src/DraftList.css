@@ -17,3 +17,7 @@
 .draft-table td { 
     background-color:white;
 }
+
+.draft-table-header {
+    background-color: #494646; /* Change background color on hover */
+}

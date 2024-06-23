@@ -98,7 +98,7 @@ const App = () => {
         <div></div>
         <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onIgnoreUpdate={handleIgnoreUpdate} averages={averagePredicted} />
         <div></div>
-        <DraftList positionAverages={averagePredicted} />    
+        <DraftList rowData={rowData} />    
         <div></div> 
       </div>
     </div>

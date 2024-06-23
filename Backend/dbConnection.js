@@ -120,7 +120,7 @@ app.get('/api/averages/def/:def/mid/:mid/ruc/:ruc/fwd/:fwd', async (req, res) =>
     const fwdResults = await queryPromise(query, fwdValues);
     averages.fwd = fwdResults[0].average_predicted;
 
-    console.log(averages.def, averages.mid, averages.ruc, averages.fwd);
+    // console.log(averages.def, averages.mid, averages.ruc, averages.fwd);
     
     res.status(200).json(averages);
   } catch (error) {
@@ -135,7 +135,7 @@ app.put('/api/rows/:id', (req, res) => {
   const { id } = req.params;
   const updates = req.body;
   
-  console.log('Request Body:', updates);
+  console.log('Request Body:', updates, 'ID:', id);
 
   // Check if there's at least one key-value pair in the request body
   if (Object.keys(updates).length === 0) {
