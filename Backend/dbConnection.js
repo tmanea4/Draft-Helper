@@ -96,7 +96,7 @@ app.get('/api/averages/def/:def/mid/:mid/ruc/:ruc/fwd/:fwd', async (req, res) =>
     FROM (
       SELECT predicted
       FROM players
-      WHERE position LIKE ? AND ignored != 1
+      WHERE position LIKE ? AND drafted != 1
       ORDER BY predicted DESC
       LIMIT ?
     ) AS highest_predicted;
@@ -143,7 +143,7 @@ app.put('/api/rows/:id', (req, res) => {
   }
 
   // Validate the column name to prevent SQL injection
-  const validColumns = ['predicted', 'ignored']; // Add any other valid columns here
+  const validColumns = ['predicted', 'drafted']; // Add any other valid columns here
   const column = Object.keys(updates)[0]; // Assuming only one key-value pair is sent
   const value = updates[column];
 

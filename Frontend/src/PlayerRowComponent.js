@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import './tableRows.css'
 
-const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
+const PlayerRowComponent = ({ data, onPredictedUpdate, onDraftedUpdate }) => {
   const [predicted, setPredicted] = useState(data.predicted);
-  const [ignored, setIgnore] = useState(data.ignored);
+  const [drafted, setDrafted] = useState(data.drafted);
 
   const handlePredictedChange = (e) => {
     data.predicted = e.target.value;
@@ -22,31 +22,32 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
       }
   };
 
-  const handleIgnoreChange = async (e) => {
-    const newIgnoreValue = e.target.checked ? 1 : 0;
-    data.ignored = newIgnoreValue;
-    onIgnoreUpdate(data.id, newIgnoreValue);
-    setIgnore(newIgnoreValue);
+  const handleDraftChange = async (e) => {
+    const newDraftValue = e.target.checked ? 1 : 0;
+    data.drafted = newDraftValue;
+    onDraftedUpdate(data.id, newDraftValue);
+    setDrafted(newDraftValue);
   };
   
   var style = 'available_player';
+
   if(data.drafted === 1)
   {
-    style = 'my_player';
+    style = 'ignored_player';
   }
-  else if(data.taken === 1)
+  else if(data.drafted === 2)
   {
     style = 'taken_player';
   }
-  else if(data.ignored === 1)
+  else if(data.drafted > 2)
   {
-     style = 'ignored_player';
+     style = 'my_player';
   }
 
   return (
     <tr className = {style}>
       <td>{data.name}</td>
-      <td>{data.age}</td>
+      {/* <td>{data.age}</td> */}
       <td>{data.average}</td>
       <td>
         <input
@@ -66,8 +67,8 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onIgnoreUpdate }) => {
       <td>
         <input
           type="checkbox"
-          checked={data.ignored === 1}
-          onChange={handleIgnoreChange}
+          checked={data.drafted === 1}
+          onChange={handleDraftChange}
         />
       </td>
       <td>{data.rating}</td>

@@ -4,7 +4,7 @@ import './MyTable.css'
 import PlayerRowComponent from './PlayerRowComponent';
 import calcRating from './RatingCalculator';
 
-const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) => {
+const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages}) => {
   const [sortField, setSortField] = useState('rating');
   const [sortDirection, setSortDirection] = useState('desc');
 
@@ -13,8 +13,6 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) =>
     data.rating = calcRating(data.position, data.predicted, averages);
     data.value = (data.predicted - data.pricedAt).toFixed(2);
   });
-
-  // rowData = rowData.filter(data => data.ignored === 0);
 
   const handleSort = (field) => {
     const newSortDirection = sortField === field && sortDirection === 'desc' ? 'asc' : 'desc';
@@ -53,9 +51,9 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) =>
         <th onClick={() => handleSort('name')}>
           Name {sortField === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
         </th>
-        <th onClick={() => handleSort('age')}>
+        {/* <th onClick={() => handleSort('age')}>
           Age {sortField === 'age' && (sortDirection === 'asc' ? '↑' : '↓')}
-        </th>
+        </th> */}
         <th onClick={() => handleSort('average')}>
           Average {sortField === 'average' && (sortDirection === 'asc' ? '↑' : '↓')}
         </th>
@@ -90,7 +88,7 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onIgnoreUpdate, averages}) =>
       </thead>
       <tbody>
         {sortedData.map((row, index) => (
-          <PlayerRowComponent key={index} data={row} onPredictedUpdate={onPredictedUpdate} onIgnoreUpdate={onIgnoreUpdate} averages={averages}  />
+          <PlayerRowComponent key={index} data={row} onPredictedUpdate={onPredictedUpdate} onDraftedUpdate={onDraftedUpdate} averages={averages}  />
         ))}
       </tbody>
     </table>

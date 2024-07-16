@@ -49,18 +49,18 @@ const App = () => {
     }
   };
 
-  const handleIgnoreUpdate = async (id, newIgnore) => {
-    console.log(`Updating player with ID ${id} to new ignore ${newIgnore}`); // Log the data
+  const handleDraftedUpdate = async (id, newDrafted) => {
+    console.log(`Updating player with ID ${id} to new drafted ${newDrafted}`); // Log the data
     try {
-      const response = await axios.put(`http://localhost:3001/api/rows/${id}`, { ignored: newIgnore });
+      const response = await axios.put(`http://localhost:3001/api/rows/${id}`, { drafted: newDrafted });
       console.log(response.data); // Log the server response
   
       setRowData(prevData =>
-        prevData.map(row => (row.id === id ? { ...row, ignored: newIgnore } : row))
+        prevData.map(row => (row.id === id ? { ...row, drafted: newDrafted } : row))
       );
       fetchAveragePredicted();
     } catch (error) {
-      console.error('Error updating ignore:', error);
+      console.error('Error updating drafted:', error);
     }
   };
 
@@ -96,7 +96,7 @@ const App = () => {
       <PositionAverageTable positionAverages={averagePredicted} />     
       <div className="tables-container">
         <div></div>
-        <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onIgnoreUpdate={handleIgnoreUpdate} averages={averagePredicted} />
+        <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onDraftedUpdate={handleDraftedUpdate} averages={averagePredicted} />
         <div></div>
         <DraftList rowData={rowData} />    
         <div></div> 
