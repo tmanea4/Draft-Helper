@@ -13,6 +13,7 @@
 .background
 {
   background-color:rgba(250, 235, 215, 0.5);
+  width: 100%;
 }
 
 .tables-container {
