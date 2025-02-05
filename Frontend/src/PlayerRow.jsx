@@ -7,11 +7,12 @@ class PlayerRow {
     this.average = average;
     this.predicted = predicted;
     this.price = price;
-    this.pricedAt = (price/8773).toFixed(2);
+    this.pricedAt = (price/10260).toFixed(2);
     this.position = position;
     this.drafted = drafted;
     this.rating = 0;
     this.value = 0;
+    this.ignored = false;
   }
 }
 

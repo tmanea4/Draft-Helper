@@ -2,10 +2,6 @@ import './DraftList.css';
 
 
 const DraftList = ({ rowData }) => {
-
-    
-
-
     return (
         <div>
             <table className='draft-table'>
@@ -16,7 +12,7 @@ const DraftList = ({ rowData }) => {
                 </thead>
                 <tbody>
                     <tr>
-                        <th>Defend</th>
+                        <th>Defenders</th>
                     </tr>
                     <tr>
                         <td>Midfielder 1</td>
@@ -31,10 +27,10 @@ const DraftList = ({ rowData }) => {
                         <th>Midfield</th>
                     </tr>
                     <tr>
-                        <th>Ruck</th>
+                        <th>Rucks</th>
                     </tr>
                     <tr>
-                        <th>Forward</th>
+                        <th>Forwards</th>
                     </tr>               
                 </tbody>
             </table>

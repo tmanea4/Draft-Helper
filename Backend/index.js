@@ -96,10 +96,10 @@ app.get('/api/averages/def/:def/mid/:mid/ruc/:ruc/fwd/:fwd', async (req, res) =>
     ) AS highest_predicted;
   `;
 
-  const defValues = [`%DEF%`, parseInt(def)];
-  const midValues = [`%MID%`, parseInt(mid)];
-  const rucValues = [`%RUC%`, parseInt(ruc)];
-  const fwdValues = [`%FWD%`, parseInt(fwd)];
+  const defValues = [`%def%`, parseInt(def)];
+  const midValues = [`%mid%`, parseInt(mid)];
+  const rucValues = [`%ruck%`, parseInt(ruc)];
+  const fwdValues = [`%fwd%`, parseInt(fwd)];
 
   try {
     const defResults = await queryPromise(query, defValues);
@@ -137,7 +137,7 @@ app.put('/api/rows/:id', (req, res) => {
   }
 
   // Validate the column name to prevent SQL injection
-  const validColumns = ['predicted', 'drafted']; // Add any other valid columns here
+  const validColumns = ['predicted', 'drafted', 'ignored']; // Add any other valid columns here
   const column = Object.keys(updates)[0]; // Assuming only one key-value pair is sent
   const value = updates[column];
 

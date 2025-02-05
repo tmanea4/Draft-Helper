@@ -6,8 +6,9 @@
 .player-table th,
 .player-table td {
   border: 1px solid #ddd; /* Add borders to table headers and cells */
-  padding: 8px; /* Add padding to improve readability */
+  padding: 4px; /* Add padding to improve readability */
   text-align: left; /* Align text to the left within cells */
+  font-size: 15px;
 }
 
 .player-table th {

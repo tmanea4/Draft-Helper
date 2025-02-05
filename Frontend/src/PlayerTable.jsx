@@ -4,7 +4,7 @@ import './MyTable.css'
 import PlayerRowComponent from './PlayerRowComponent';
 import calcRating from './RatingCalculator';
 
-const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages}) => {
+const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages, onIgnoredUpdate}) => {
   const [sortField, setSortField] = useState('rating');
   const [sortDirection, setSortDirection] = useState('desc');
 
@@ -60,9 +60,9 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages}) =
         <th onClick={() => handleSort('predicted')}>
           Predicted {sortField === 'predicted' && (sortDirection === 'asc' ? '↑' : '↓')}
         </th>
-        <th onClick={() => handleSort('price')}>
+        {/* <th onClick={() => handleSort('price')}>
           Price {sortField === 'price' && (sortDirection === 'asc' ? '↑' : '↓')}
-        </th>
+        </th> */}
         <th onClick={() => handleSort('pricedAt')}>
           Priced At {sortField === 'pricedAt' && (sortDirection === 'asc' ? '↑' : '↓')}
         </th>
@@ -88,7 +88,7 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages}) =
       </thead>
       <tbody>
         {sortedData.map((row, index) => (
-          <PlayerRowComponent key={index} data={row} onPredictedUpdate={onPredictedUpdate} onDraftedUpdate={onDraftedUpdate} averages={averages}  />
+          <PlayerRowComponent key={index} data={row} onPredictedUpdate={onPredictedUpdate} onDraftedUpdate={onDraftedUpdate} averages={averages} onIgnoredUpdate={onIgnoredUpdate}  />
         ))}
       </tbody>
     </table>

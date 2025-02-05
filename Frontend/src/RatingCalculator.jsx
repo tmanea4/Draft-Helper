@@ -14,19 +14,19 @@
 
 export default function calcRating(pos, predicted, averages)
 {
-    if(pos.includes('FWD'))
+    if(pos.includes('fwd'))
     {
         return (predicted - averages.fwd).toFixed(2);
     }
-    else if(pos.includes('DEF'))
+    else if(pos.includes('def'))
     {
         return (predicted - averages.def).toFixed(2);
     }  
-    else if (pos.includes('RUC'))
+    else if (pos.includes('ruc'))
     {
         return (predicted - averages.ruc).toFixed(2);
     }
-    else if(pos.includes('MID'))
+    else if(pos.includes('mid'))
     {
         return (predicted - averages.mid).toFixed(2);
     }    
