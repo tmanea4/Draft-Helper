@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Define an API endpoint to fetch data
-app.get('/api/rows', (req, res) => {
+app.get('/api/rows/:table', (req, res) => {
   client.query('SELECT * FROM players', (err, results) => {
     if (err) {
       res.status(500).send(err);
@@ -123,13 +123,56 @@ app.get('/api/averages/def/:def/mid/:mid/ruc/:ruc/fwd/:fwd', async (req, res) =>
   }
 });
 
+const tableTest = `
+  SELECT EXISTS (
+    SELECT 1 FROM information_schema.tables 
+    WHERE table_name = $1 AND table_schema = 'public'
+  ) AS table_exists;
+`;
+
+app.get('/api/testtable/:table', async (req, res) => {
+  try {
+    const table = req.params.table;
+    const sanitizedTable = table.replace(/[^a-zA-Z0-9_]/g, '');
+    console.log("Test Table: ", sanitizedTable);
+    const result = await queryPromise(tableTest, [sanitizedTable]);
+    console.log(result[0].table_exists);
+    res.status(200).json(result[0].table_exists); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.put('/api/createtable/:table', async (req, res) => {
+  try {
+    const table = req.params.table;
+    const sanitizedTable = table.replace(/[^a-zA-Z0-9_]/g, '');
+    console.log("Create Table: ", sanitizedTable);
+    const createTableQuery = `
+      CREATE TABLE IF NOT EXISTS ${sanitizedTable} (
+        id SERIAL PRIMARY KEY,
+        predicted FLOAT,
+        drafted INT DEFAULT 0,
+        ignored INT DEFAULT 0
+      );
+    `;
+
+    const result = await queryPromise(createTableQuery);
+    console.log(result);
+    res.status(200).json(result); 
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 /* Put Predicted */
-app.put('/api/rows/:id', (req, res) => {
-  const { id } = req.params;
+app.put('/api/rows/:id/:table', (req, res) => {
+  const { id, table } = req.params;
   const updates = req.body;
   
-  console.log('Request Body:', updates, 'ID:', id);
+  console.log('Request Body:', updates, 'ID:', id, 'Table:', table);
 
   // Check if there's at least one key-value pair in the request body
   if (Object.keys(updates).length === 0) {
@@ -146,7 +189,13 @@ app.put('/api/rows/:id', (req, res) => {
   }
   
   // Construct the query dynamically
-  const query = `UPDATE players SET ${column} = $1 WHERE id = $2`;
+  const query = `
+  INSERT INTO ${table} (id, ${column})
+  VALUES ($2, $1)
+  ON CONFLICT (id)
+  DO UPDATE SET ${column} = EXCLUDED.${column};
+  `;  
+  
   client.query(query, [value, id], (err, results) => {
     if (err) {
       console.error('Error updating data:', err); // Log the error

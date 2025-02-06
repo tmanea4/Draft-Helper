@@ -28,13 +28,21 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages, on
   const sortedData = [...rowData].sort((a, b) => {
     const valueA = a[sortField];
     const valueB = b[sortField];
-
+  
     const numA = parseFloat(valueA);
     const numB = parseFloat(valueB);
-
+  
     const isNumA = !isNaN(numA);
     const isNumB = !isNaN(numB);
-
+  
+    const isIgnoredA = a.ignored; // true if item is ignored
+    const isIgnoredB = b.ignored; // true if item is ignored
+  
+    // Move ignored items to the bottom
+    if (isIgnoredA && !isIgnoredB) return 1;
+    if (!isIgnoredA && isIgnoredB) return -1;
+  
+    // Standard sorting logic
     if (isNumA && isNumB) {
       return sortDirection === 'asc' ? numA - numB : numB - numA;
     } else {
@@ -43,6 +51,7 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages, on
       return 0;
     }
   });
+  
 
   return (
     <table className="player-table">

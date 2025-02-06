@@ -14,27 +14,27 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onDraftedUpdate, onIgnore
   };
 
   const handlePredictedBlur = () => {
-    onPredictedUpdate(data.id, predicted);
+    onPredictedUpdate(data.id, predicted, data.drafted, data.ignored);
   };
 
   const handlePredictedKeyDown = (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
-        onPredictedUpdate(data.id, predicted);
+        onPredictedUpdate(data.id, predicted, data.drafted, data.ignored);
       }
   };
 
   const handleDraftChange = async () => {
     const newDraftValue = !data.drafted;
     data.drafted = newDraftValue;
-    onDraftedUpdate(data.id, newDraftValue);
+    onPredictedUpdate(data.id, data.predicted, data.drafted, data.ignored);
     setDrafted(newDraftValue);
   };
 
   const handleIgnoredChange = async (e) => {
     const newIgnoreValue = e.target.checked ? 1 : 0;
     data.ignored = newIgnoreValue;
-    onIgnoredUpdate(data.id, newIgnoreValue);
+    onPredictedUpdate(data.id, data.predicted, data.drafted, data.ignored);
     setIgnored(newIgnoreValue);
   };
   

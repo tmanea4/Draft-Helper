@@ -12,7 +12,7 @@ import NavBar from './NavBar';
 import './App.css';
 
 const fetchData = async () => {
-  const response = await axios.get('http://localhost:3000/api/rows');
+  const response = await axios.get('http://localhost:3000/api/rows/test');
   const data = response.data.map(row => new PlayerRow(row.id, row.name, row.age, row.average, row.predicted, row.price, row.position, row.drafted, row.ignored));
   return data;
 };
@@ -24,6 +24,7 @@ const App = () => {
   const [averagePredicted, setAveragePredicted] = useState(null);
   const [user, setUser] = useState(null);
   const [userNameInput, setUserNameInput] = useState('');
+  const [dbExists, setDbExists] = useState(false);
 
 
   useEffect(() => {
@@ -43,7 +44,7 @@ const App = () => {
   const handlePredictedUpdate = async (id, newPredicted) => {
     console.log(`Updating player with ID ${id} to new average ${newPredicted}`); // Log the data
     try {
-      const response = await axios.put(`http://localhost:3000/api/rows/${id}`, { predicted: newPredicted });
+      const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { predicted: newPredicted });
       console.log(response.data); // Log the server response
 
       setRowData(prevData =>
@@ -60,7 +61,7 @@ const App = () => {
     newDrafted = newDrafted ? 1 : 0;
     console.log(`Updating player with ID ${id} to new drafted ${newDrafted}`); // Log the data
     try {
-      const response = await axios.put(`http://localhost:3000/api/rows/${id}`, { drafted: newDrafted });
+      const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { drafted: newDrafted });
       console.log(response.data); // Log the server response
   
       setRowData(prevData =>
@@ -75,7 +76,7 @@ const App = () => {
   const handleIgnoredUpdate = async (id, newIgnored) => {
     console.log(`Updating player with ID ${id} to new ignored ${newIgnored}`); // Log the data
     try {
-      const response = await axios.put(`http://localhost:3000/api/rows/${id}`, { ignored: newIgnored });
+      const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { ignored: newIgnored });
       console.log(response.data); // Log the server response
   
       setRowData(prevData =>
@@ -86,6 +87,16 @@ const App = () => {
       console.error('Error updating ignored:', error);
     }
   };
+
+  const updatePlayer = async (id, newPredicted, newDrafted, newIgnored) => {
+    try {
+      const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { predicted: newPredicted, drafted: newDrafted, ignored: newIgnored });
+      console.log(response.data); // Log the server response
+    } catch (error) {
+      console.error('Error updating player:', error);
+    }
+  };
+
 
   const fetchAveragePredicted = async () => {
     try {
@@ -120,6 +131,15 @@ const App = () => {
     setUser(null);
   }
 
+  const testDbExists = async (user) => {
+    const response = await axios.get(`http://localhost:3000/api/testtable/${user}`); 
+    setDbExists(response.data);
+  }
+
+  const createTable = async (user) => {
+    const response = await axios.put(`http://localhost:3000/api/createtable/${user}`); 
+  }
+
   useEffect(() => {
     fetchAveragePredicted();
   }, []);
@@ -152,6 +172,18 @@ const App = () => {
     }
   }
 
+  if(user === null)
+  {
+    return <div>User does not exist</div>;
+  }
+
+  testDbExists(user); 
+
+  if(!dbExists)
+  {
+    createTable(user);
+  }
+
   return (
     <div className = 'background'>
       <div>
@@ -164,7 +196,7 @@ const App = () => {
       </div>   
       <div className="tables-container">
         <div></div>
-        <PlayerTable rowData={rowData} onPredictedUpdate={handlePredictedUpdate} onDraftedUpdate={handleDraftedUpdate} averages={averagePredicted} onIgnoredUpdate={handleIgnoredUpdate}/>
+        <PlayerTable rowData={rowData} onPredictedUpdate={updatePlayer} onDraftedUpdate={handleDraftedUpdate} averages={averagePredicted} onIgnoredUpdate={handleIgnoredUpdate}/>
         <div></div>
         <DraftList rowData={rowData} />    
         <div></div> 

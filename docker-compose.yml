@@ -32,7 +32,7 @@ services:
     tty: true
     ports: 
       - "5173:5173"
-    command: npm run dev
+    command: sh -c "npm install && npm run dev"
 
   db:
     image: postgres
