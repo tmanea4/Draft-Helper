@@ -20,30 +20,21 @@ const App = () => {
   const [userNameInput, setUserNameInput] = useState('');
   const [dbExists, setDbExists] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    fetchData()
-      .then(data => {
-        setRowData(data);
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-        setError('Failed to fetch data. Please try again later.');
-        setLoading(false);
-      });
-  }, []);
-
   const updatePlayer = async (id, newPredicted, newDrafted, newIgnored) => {
     try {
       const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { predicted: newPredicted, drafted: newDrafted, ignored: newIgnored });
-      console.log(response.data); // Log the server response
+      
+      setRowData(prevData =>
+        prevData.map(row => (row.id === id ? { ...row, ignored: newIgnored } : row))
+      );
+      fetchAveragePredicted();
     } catch (error) {
       console.error('Error updating player:', error);
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = async (user) => {
+    console.log(user);
     const response = await axios.get(`http://localhost:3000/api/rows/${user}`);
     const data = response.data.map(row => new PlayerRow(row.id, row.name, row.age, row.average, row.predicted, row.price, row.position, row.drafted, row.ignored));
     return data;
@@ -95,18 +86,6 @@ const App = () => {
     fetchAveragePredicted();
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
-
-  if(!averagePredicted) {
-    return <div>Loading...</div>;
-  }
-
   if(!user) {
     if(fetchUserFromCookies() !== null) 
     {
@@ -121,6 +100,32 @@ const App = () => {
         </div>
       )
     }
+  }
+  
+  useEffect(() => {
+    setLoading(true);
+    fetchData(user)
+      .then(data => {
+        setRowData(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch data. Please try again later.');
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if(!averagePredicted) {
+    return <div>Loading...</div>;
   }
 
   if(user === null)
@@ -147,7 +152,7 @@ const App = () => {
       </div>   
       <div className="tables-container">
         <div></div>
-        <PlayerTable rowData={rowData} onPredictedUpdate={updatePlayer} onDraftedUpdate={updatePlayer} averages={averagePredicted} onIgnoredUpdate={updatePlayer}/>
+        <PlayerTable rowData={rowData} onUpdate={updatePlayer} averages={averagePredicted}/>
         <div></div>
         <DraftList rowData={rowData} />    
         <div></div> 

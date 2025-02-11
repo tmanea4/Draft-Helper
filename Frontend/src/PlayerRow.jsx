@@ -1,6 +1,6 @@
 // PlayerRow.js
 class PlayerRow {
-  constructor(id, name, age, average, predicted, price, position, drafted) {
+  constructor(id, name, age, average, predicted, price, position, drafted, ignored) {
     this.id = id;
     this.name = name;
     this.age = age;
@@ -12,7 +12,7 @@ class PlayerRow {
     this.drafted = drafted;
     this.rating = 0;
     this.value = 0;
-    this.ignored = false;
+    this.ignored = ignored;
   }
 }
 

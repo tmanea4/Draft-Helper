@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './tableRows.css'
 
-const PlayerRowComponent = ({ data, onPredictedUpdate, onDraftedUpdate, onIgnoredUpdate }) => {
+const PlayerRowComponent = ({ data, onUpdate }) => {
   const [predicted, setPredicted] = useState(data.predicted);
   const [drafted, setDrafted] = useState(data.drafted);
   const [ignored, setIgnored] = useState(data.ignored);
@@ -14,29 +14,34 @@ const PlayerRowComponent = ({ data, onPredictedUpdate, onDraftedUpdate, onIgnore
   };
 
   const handlePredictedBlur = () => {
-    onPredictedUpdate(data.id, predicted, data.drafted, data.ignored);
+    onUpdate(data.id, predicted, data.drafted, data.ignored);
   };
 
   const handlePredictedKeyDown = (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
-        onPredictedUpdate(data.id, predicted, data.drafted, data.ignored);
+        onUpdate(data.id, predicted, data.drafted, data.ignored);
       }
   };
 
   const handleDraftChange = async () => {
-    const newDraftValue = !data.drafted;
+    const newDraftValue = data.drafted === 0 ? 1 : 0;
     data.drafted = newDraftValue;
-    onPredictedUpdate(data.id, data.predicted, data.drafted, data.ignored);
+    onUpdate(data.id, data.predicted, data.drafted, data.ignored);
     setDrafted(newDraftValue);
   };
 
   const handleIgnoredChange = async (e) => {
     const newIgnoreValue = e.target.checked ? 1 : 0;
     data.ignored = newIgnoreValue;
-    onPredictedUpdate(data.id, data.predicted, data.drafted, data.ignored);
+    onUpdate(data.id, data.predicted, data.drafted, data.ignored);
     setIgnored(newIgnoreValue);
   };
+
+  if(data.id === 4)
+  {
+    console.log(data);
+  }
   
   var style = 'available_player';
 

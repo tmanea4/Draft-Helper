@@ -4,7 +4,7 @@ import './MyTable.css'
 import PlayerRowComponent from './PlayerRowComponent';
 import calcRating from './RatingCalculator';
 
-const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages, onIgnoredUpdate}) => {
+const PlayerTable = ({ rowData, onUpdate, averages}) => {
   const [sortField, setSortField] = useState('rating');
   const [sortDirection, setSortDirection] = useState('desc');
 
@@ -37,7 +37,7 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages, on
   
     const isIgnoredA = a.ignored; // true if item is ignored
     const isIgnoredB = b.ignored; // true if item is ignored
-  
+
     // Move ignored items to the bottom
     if (isIgnoredA && !isIgnoredB) return 1;
     if (!isIgnoredA && isIgnoredB) return -1;
@@ -97,7 +97,7 @@ const PlayerTable = ({ rowData, onPredictedUpdate, onDraftedUpdate, averages, on
       </thead>
       <tbody>
         {sortedData.map((row, index) => (
-          <PlayerRowComponent key={index} data={row} onPredictedUpdate={onPredictedUpdate} onDraftedUpdate={onDraftedUpdate} averages={averages} onIgnoredUpdate={onIgnoredUpdate}  />
+          <PlayerRowComponent key={index} data={row} onUpdate={onUpdate} />
         ))}
       </tbody>
     </table>

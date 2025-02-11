@@ -31,7 +31,26 @@ app.use(express.urlencoded({ extended: true }));
 
 // Define an API endpoint to fetch data
 app.get('/api/rows/:table', (req, res) => {
-  client.query('SELECT * FROM players', (err, results) => {
+
+  const { table } = req.params;
+  console.log('Table:', table);
+  console.log('Request:', req.params);
+  // const query = `SELECT * FROM players`;
+
+  const query = `SELECT 
+  p.id, 
+  p.name,
+  p.age,
+  p.average, 
+  COALESCE(u.predicted, p.average) AS predicted, 
+  p.price,
+  p.position,
+  COALESCE(u.drafted, p.drafted) AS drafted, 
+  COALESCE(u.ignored, p.ignored) AS ignored
+FROM players p
+LEFT JOIN tmanea4 u ON p.id = u.id;`;
+
+  client.query(query, (err, results) => {
     if (err) {
       res.status(500).send(err);
     } else {
@@ -134,9 +153,7 @@ app.get('/api/testtable/:table', async (req, res) => {
   try {
     const table = req.params.table;
     const sanitizedTable = table.replace(/[^a-zA-Z0-9_]/g, '');
-    console.log("Test Table: ", sanitizedTable);
     const result = await queryPromise(tableTest, [sanitizedTable]);
-    console.log(result[0].table_exists);
     res.status(200).json(result[0].table_exists); 
   } catch (error) {
     console.error(error);
@@ -148,7 +165,6 @@ app.put('/api/createtable/:table', async (req, res) => {
   try {
     const table = req.params.table;
     const sanitizedTable = table.replace(/[^a-zA-Z0-9_]/g, '');
-    console.log("Create Table: ", sanitizedTable);
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS ${sanitizedTable} (
         id SERIAL PRIMARY KEY,
@@ -159,7 +175,6 @@ app.put('/api/createtable/:table', async (req, res) => {
     `;
 
     const result = await queryPromise(createTableQuery);
-    console.log(result);
     res.status(200).json(result); 
   } catch (error) {
     console.error(error);
@@ -167,45 +182,56 @@ app.put('/api/createtable/:table', async (req, res) => {
   }
 });
 
-/* Put Predicted */
-app.put('/api/rows/:id/:table', (req, res) => {
+app.put('/api/rows/:id/:table', async (req, res) => {
   const { id, table } = req.params;
   const updates = req.body;
-  
+
   console.log('Request Body:', updates, 'ID:', id, 'Table:', table);
 
   // Check if there's at least one key-value pair in the request body
-  if (Object.keys(updates).length === 0) {
+  if (Object.keys(updates).length === 0) { 
     return res.status(400).json({ error: 'Update data is required' });
   }
 
-  // Validate the column name to prevent SQL injection
-  const validColumns = ['predicted', 'drafted', 'ignored']; // Add any other valid columns here
-  const column = Object.keys(updates)[0]; // Assuming only one key-value pair is sent
-  const value = updates[column];
+  // Validate and filter columns
+  const validColumns = ['predicted', 'drafted', 'ignored']; // List of allowed columns
+  const columns = Object.keys(updates).filter(col => validColumns.includes(col));
 
-  if (!validColumns.includes(column)) {
-    return res.status(400).json({ error: 'Invalid column name' });
+  if (columns.length === 0) {
+    return res.status(400).json({ error: 'Invalid column names' });
   }
-  
+
+  // Generate column names, placeholders, and update expressions
+  const columnNames = columns.join(', ');
+  const placeholders = columns.map((_, i) => `$${i + 2}`).join(', ');
+  const updatesList = columns.map(col => `${col} = EXCLUDED.${col}`).join(', ');
+
   // Construct the query dynamically
   const query = `
-  INSERT INTO ${table} (id, ${column})
-  VALUES ($2, $1)
-  ON CONFLICT (id)
-  DO UPDATE SET ${column} = EXCLUDED.${column};
-  `;  
-  
-  client.query(query, [value, id], (err, results) => {
-    if (err) {
-      console.error('Error updating data:', err); // Log the error
-      res.status(500).send(err);
-    } else if (results.rows.affectedRows === 0) {
-      res.status(404).json({ error: 'Player not found' });
-    } else {
-      res.json({ success: true });
+    INSERT INTO ${table} (id, ${columnNames})
+    VALUES ($1, ${placeholders})
+    ON CONFLICT (id)
+    DO UPDATE SET ${updatesList};
+  `;
+
+  console.log(query)
+
+  // Extract values, ensuring ID is first
+  const values = [id, ...columns.map(col => updates[col])];
+
+  console.log('Query:', query, 'Values:', values);
+
+  try {
+    const result = await client.query(query, values);
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Player not found' });
     }
-  });
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error updating data:', err);
+    res.status(500).json({ error: err.message });
+  }
 });
+
 
 app.listen(3000, () => console.log(`App running on port 3000.`));
