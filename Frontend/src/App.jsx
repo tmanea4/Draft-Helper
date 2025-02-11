@@ -11,12 +11,6 @@ import NavBar from './NavBar';
 
 import './App.css';
 
-const fetchData = async () => {
-  const response = await axios.get('http://localhost:3000/api/rows/test');
-  const data = response.data.map(row => new PlayerRow(row.id, row.name, row.age, row.average, row.predicted, row.price, row.position, row.drafted, row.ignored));
-  return data;
-};
-
 const App = () => {
   const [rowData, setRowData] = useState([]);
   const [error, setError] = useState(null);
@@ -25,7 +19,6 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [userNameInput, setUserNameInput] = useState('');
   const [dbExists, setDbExists] = useState(false);
-
 
   useEffect(() => {
     setLoading(true);
@@ -41,53 +34,6 @@ const App = () => {
       });
   }, []);
 
-  const handlePredictedUpdate = async (id, newPredicted) => {
-    console.log(`Updating player with ID ${id} to new average ${newPredicted}`); // Log the data
-    try {
-      const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { predicted: newPredicted });
-      console.log(response.data); // Log the server response
-
-      setRowData(prevData =>
-        prevData.map(row => (row.id === id ? { ...row, predicted: newPredicted } : row))
-      );
-      fetchAveragePredicted();
-    } catch (error) {
-      console.error('Error updating average:', error);
-      setError('Failed to update average. Please try again later.');
-    }
-  };
-
-  const handleDraftedUpdate = async (id, newDrafted) => {
-    newDrafted = newDrafted ? 1 : 0;
-    console.log(`Updating player with ID ${id} to new drafted ${newDrafted}`); // Log the data
-    try {
-      const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { drafted: newDrafted });
-      console.log(response.data); // Log the server response
-  
-      setRowData(prevData =>
-        prevData.map(row => (row.id === id ? { ...row, drafted: newDrafted } : row))
-      );
-      fetchAveragePredicted();
-    } catch (error) {
-      console.error('Error updating drafted:', error);
-    }
-  };
-
-  const handleIgnoredUpdate = async (id, newIgnored) => {
-    console.log(`Updating player with ID ${id} to new ignored ${newIgnored}`); // Log the data
-    try {
-      const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { ignored: newIgnored });
-      console.log(response.data); // Log the server response
-  
-      setRowData(prevData =>
-        prevData.map(row => (row.id === id ? { ...row, ignored: newIgnored } : row))
-      );
-      fetchAveragePredicted();
-    } catch (error) {
-      console.error('Error updating ignored:', error);
-    }
-  };
-
   const updatePlayer = async (id, newPredicted, newDrafted, newIgnored) => {
     try {
       const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { predicted: newPredicted, drafted: newDrafted, ignored: newIgnored });
@@ -97,6 +43,11 @@ const App = () => {
     }
   };
 
+  const fetchData = async () => {
+    const response = await axios.get(`http://localhost:3000/api/rows/${user}`);
+    const data = response.data.map(row => new PlayerRow(row.id, row.name, row.age, row.average, row.predicted, row.price, row.position, row.drafted, row.ignored));
+    return data;
+  };
 
   const fetchAveragePredicted = async () => {
     try {
@@ -196,7 +147,7 @@ const App = () => {
       </div>   
       <div className="tables-container">
         <div></div>
-        <PlayerTable rowData={rowData} onPredictedUpdate={updatePlayer} onDraftedUpdate={handleDraftedUpdate} averages={averagePredicted} onIgnoredUpdate={handleIgnoredUpdate}/>
+        <PlayerTable rowData={rowData} onPredictedUpdate={updatePlayer} onDraftedUpdate={updatePlayer} averages={averagePredicted} onIgnoredUpdate={updatePlayer}/>
         <div></div>
         <DraftList rowData={rowData} />    
         <div></div> 
