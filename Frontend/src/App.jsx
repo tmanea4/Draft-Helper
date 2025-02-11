@@ -8,6 +8,7 @@ import PlayerRow from './PlayerRow';
 import PositionAverageTable from './PositionAverageTable';
 import DraftList from './DraftList';
 import NavBar from './NavBar';
+import PredictedAverager from './PredictedAverager';
 
 import './App.css';
 
@@ -27,28 +28,22 @@ const App = () => {
       setRowData(prevData =>
         prevData.map(row => (row.id === id ? { ...row, ignored: newIgnored } : row))
       );
-      fetchAveragePredicted();
+      updateAveragePredicted();
     } catch (error) {
       console.error('Error updating player:', error);
     }
   };
 
   const fetchData = async (user) => {
-    console.log(user);
     const response = await axios.get(`http://localhost:3000/api/rows/${user}`);
     const data = response.data.map(row => new PlayerRow(row.id, row.name, row.age, row.average, row.predicted, row.price, row.position, row.drafted, row.ignored));
     return data;
   };
 
-  const fetchAveragePredicted = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/api/averages/def/48/mid/64/ruc/8/fwd/48');
-      const average = response.data;
-      setAveragePredicted(average);
-    } catch (error) {
-      console.error('Error fetching average predicted:', error);
-    }
-  };
+  const updateAveragePredicted = () => {
+      const aresponse = PredictedAverager(rowData);
+      setAveragePredicted(aresponse);
+    };
 
   const fetchUserFromCookies = () => {
     const user = Cookies.get('user');
@@ -82,9 +77,6 @@ const App = () => {
     const response = await axios.put(`http://localhost:3000/api/createtable/${user}`); 
   }
 
-  useEffect(() => {
-    fetchAveragePredicted();
-  }, []);
 
   if(!user) {
     if(fetchUserFromCookies() !== null) 
@@ -124,8 +116,12 @@ const App = () => {
     return <div>{error}</div>;
   }
 
+  if(rowData.length === 0) {
+    return <div>No data available</div>;
+  }
+
   if(!averagePredicted) {
-    return <div>Loading...</div>;
+    updateAveragePredicted(rowData);  
   }
 
   if(user === null)

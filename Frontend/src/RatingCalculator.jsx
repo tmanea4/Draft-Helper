@@ -22,9 +22,9 @@ export default function calcRating(pos, predicted, averages)
     {
         return (predicted - averages.def).toFixed(2);
     }  
-    else if (pos.includes('ruc'))
+    else if (pos.includes('ruck'))
     {
-        return (predicted - averages.ruc).toFixed(2);
+        return (predicted - averages.ruck).toFixed(2);
     }
     else if(pos.includes('mid'))
     {

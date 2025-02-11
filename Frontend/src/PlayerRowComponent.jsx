@@ -31,6 +31,13 @@ const PlayerRowComponent = ({ data, onUpdate }) => {
     setDrafted(newDraftValue);
   };
 
+  const handleTakenChange = async () => {
+    const newDraftValue = data.drafted === 0 ? 2 : 0;
+    data.drafted = newDraftValue;
+    onUpdate(data.id, data.predicted, data.drafted, data.ignored);
+    setDrafted(newDraftValue);
+  };
+
   const handleIgnoredChange = async (e) => {
     const newIgnoreValue = e.target.checked ? 1 : 0;
     data.ignored = newIgnoreValue;
@@ -38,11 +45,6 @@ const PlayerRowComponent = ({ data, onUpdate }) => {
     setIgnored(newIgnoreValue);
   };
 
-  if(data.id === 4)
-  {
-    console.log(data);
-  }
-  
   var style = 'available_player';
 
   if(data.drafted === 1)
@@ -76,8 +78,8 @@ const PlayerRowComponent = ({ data, onUpdate }) => {
       {/* <td>{data.price / 1000}</td> */}
       <td>{data.pricedAt}</td>
       <td>{data.position}</td>
-      <td><button onClick={handleDraftChange}>{data.drafted ? 'Undraft' : 'Draft'}</button></td>
-      <td><button>{data.drafted ? 'Undo' : 'Taken'}</button></td>
+      <td><button onClick={handleDraftChange}>{data.drafted === 1 ? 'Undraft' : 'Draft'}</button></td>
+      <td><button onClick={handleTakenChange}>{data.drafted === 2 ? 'Undo' : 'Taken'}</button></td>
       <td>
         <input
           type="checkbox"

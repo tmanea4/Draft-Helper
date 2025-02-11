@@ -16,7 +16,7 @@ const PositionAverageTable = ({ positionAverages }) => {
                     <tr>
                         <td>{positionAverages.def.toFixed(2)}</td>
                         <td>{positionAverages.mid.toFixed(2)}</td>
-                        <td>{positionAverages.ruc.toFixed(2)}</td>
+                        <td>{positionAverages.ruck.toFixed(2)}</td>
                         <td>{positionAverages.fwd.toFixed(2)}</td>
                     </tr>
                 </tbody>
