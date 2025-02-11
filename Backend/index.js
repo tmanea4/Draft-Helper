@@ -94,54 +94,6 @@ const queryPromise = (query, values) => {
   });
 };
 
-app.get('/api/averages/def/:def/mid/:mid/ruc/:ruc/fwd/:fwd', async (req, res) => {
-  const { def, mid, ruc, fwd } = req.params;
-
-  const averages = {
-    def: 0,
-    fwd: 0,
-    mid: 0,
-    ruc: 0
-  };  
-
-  const query = `
-    SELECT AVG(predicted) AS average_predicted
-    FROM (
-      SELECT predicted
-      FROM players
-      WHERE position LIKE $1 AND drafted != 1
-      ORDER BY predicted DESC
-      LIMIT $2
-    ) AS highest_predicted;
-  `;
-
-  const defValues = [`%def%`, parseInt(def)];
-  const midValues = [`%mid%`, parseInt(mid)];
-  const rucValues = [`%ruck%`, parseInt(ruc)];
-  const fwdValues = [`%fwd%`, parseInt(fwd)];
-
-  try {
-    const defResults = await queryPromise(query, defValues);
-    averages.def = defResults[0].average_predicted;
-
-    const midResults = await queryPromise(query, midValues);
-    averages.mid = midResults[0].average_predicted;
-
-    const rucResults = await queryPromise(query, rucValues);
-    averages.ruc = rucResults[0].average_predicted;
-
-    const fwdResults = await queryPromise(query, fwdValues);
-    averages.fwd = fwdResults[0].average_predicted;
-
-    // console.log(averages.def, averages.mid, averages.ruc, averages.fwd);
-    
-    res.status(200).json(averages);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).json({ error: 'Error fetching data' });
-  }
-});
-
 const tableTest = `
   SELECT EXISTS (
     SELECT 1 FROM information_schema.tables 

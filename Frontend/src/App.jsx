@@ -24,10 +24,14 @@ const App = () => {
   const updatePlayer = async (id, newPredicted, newDrafted, newIgnored) => {
     try {
       const response = await axios.put(`http://localhost:3000/api/rows/${id}/${user}`, { predicted: newPredicted, drafted: newDrafted, ignored: newIgnored });
-      
       setRowData(prevData =>
-        prevData.map(row => (row.id === id ? { ...row, ignored: newIgnored } : row))
+        prevData.map(row =>
+          row.id === id
+            ? { ...row, predicted: newPredicted, drafted: newDrafted, ignored: newIgnored }
+            : row
+        )
       );
+      
       updateAveragePredicted();
     } catch (error) {
       console.error('Error updating player:', error);
@@ -142,9 +146,8 @@ const App = () => {
         <NavBar user={user} logout={logout}/>
       </div>
       <div style={{ display: "flex", gap: "16px" }}>
-        {/* <PositionAverageTable positionAverages={averagePredicted} />   */}
         <PositionAverageTable positionAverages={averagePredicted} />  
-        
+        {/* There should be a thing here that customises positions/player numbers, maybe in a table */}
       </div>   
       <div className="tables-container">
         <div></div>

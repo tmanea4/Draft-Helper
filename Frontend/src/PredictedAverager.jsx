@@ -14,13 +14,13 @@ export default function PredictedAverager(rowData)
 function getAverage(players, position, number) {
     const top8Mids = players
         .filter(player => player.position === position) 
-        .sort((a, b) => b.predicted - a.predicted) 
-        .slice(0, 32); 
+        .filter(player => player.ignored !== 1)
+        .sort((a, b) => parseFloat(b.predicted) - parseFloat(a.predicted)) 
+        .slice(0, number); 
 
     const sum = top8Mids
-        .filter(player => player.ignored !== 1)
-        .filter(player => player.drafted !== 1)
-        .reduce((sum, player) => sum + player.predicted, 0);
+        .filter(player => player.drafted === 0)
+        .reduce((sum, player) => sum + parseFloat(player.predicted), 0);
 
     const count = top8Mids.filter(player => player.ignored !== 1).length;
 
