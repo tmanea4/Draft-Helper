@@ -31,7 +31,7 @@ const RowEditor = ({position, teamStructure, onUpdate}) => {
 
     return (
         <input
-          className='pred_input'
+          className='pos_input'
           type="number"
           value={newvalue}
           onChange={handleChange}
