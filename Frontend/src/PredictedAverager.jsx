@@ -12,6 +12,10 @@ export default function PredictedAverager(rowData, teamStructure)
 }
 
 function getAverage(players, position, number) {
+    if(number === 0) {
+        return 200;
+    }
+
     const top8Mids = players
         .filter(player => player.position === position) 
         .filter(player => player.ignored !== 1)

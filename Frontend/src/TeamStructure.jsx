@@ -13,7 +13,7 @@ const RowEditor = ({position, teamStructure, onUpdate}) => {
     }
 
     const handleBlur = (e) => {
-        if(newvalue > 0)
+        if(newvalue >= 0)
         {
             onUpdate(position, newvalue);
         }
@@ -22,7 +22,7 @@ const RowEditor = ({position, teamStructure, onUpdate}) => {
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            if(newvalue > 0)
+            if(newvalue >= 0)
             {
                 onUpdate(position, newvalue);
             }

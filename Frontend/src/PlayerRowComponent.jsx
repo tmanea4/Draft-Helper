@@ -9,18 +9,21 @@ const PlayerRowComponent = ({ data, onUpdate }) => {
   const [ignored, setIgnored] = useState(data.ignored);
 
   const handlePredictedChange = (e) => {
-    data.predicted = e.target.value;
-    setPredicted(e.target.value);
-  };
+    console.log(e.nativeEvent.inputType);
+    if(e.nativeEvent.inputType === 'insertText' || e.nativeEvent.inputType === 'deleteContentBackward')
+    {
+      data.predicted = e.target.value;
+      setPredicted(e.target.value);
+      return;
+    }
+    onUpdate(data.id, e.target.value, data.drafted, data.ignored);
 
-  const handlePredictedBlur = () => {
-    onUpdate(data.id, predicted, data.drafted, data.ignored);
   };
 
   const handlePredictedKeyDown = (event) => {
     if (event.key === 'Enter') {
         event.preventDefault();
-        onUpdate(data.id, predicted, data.drafted, data.ignored);
+        onUpdate(data.id, data.predicted, data.drafted, data.ignored);
       }
   };
 
@@ -71,7 +74,6 @@ const PlayerRowComponent = ({ data, onUpdate }) => {
           type="number"
           value={data.predicted}
           onChange={handlePredictedChange}
-          onBlur={handlePredictedBlur}
           onKeyDown={handlePredictedKeyDown}
         />
       </td>
