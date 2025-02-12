@@ -9,6 +9,7 @@ import PositionAverageTable from './PositionAverageTable';
 import DraftList from './DraftList';
 import NavBar from './NavBar';
 import PredictedAverager from './PredictedAverager';
+import TeamStructure from './TeamStructure';
 
 import './App.css';
 
@@ -20,6 +21,7 @@ const App = () => {
   const [user, setUser] = useState(null);
   const [userNameInput, setUserNameInput] = useState('');
   const [dbExists, setDbExists] = useState(false);
+  const [teamStructure, setTeamStructure] = useState(null);
 
   const updatePlayer = async (id, newPredicted, newDrafted, newIgnored) => {
     try {
@@ -45,7 +47,7 @@ const App = () => {
   };
 
   const updateAveragePredicted = () => {
-      const aresponse = PredictedAverager(rowData);
+      const aresponse = PredictedAverager(rowData, teamStructure);
       setAveragePredicted(aresponse);
     };
 
@@ -81,6 +83,11 @@ const App = () => {
     const response = await axios.put(`http://localhost:3000/api/createtable/${user}`); 
   }
 
+  const updateTeamStucture = async (newTeamStructure) => {
+    const response = await axios.put(`http://localhost:3000/api/team-structure/${user}`, newTeamStructure);
+    setTeamStructure(newTeamStructure);
+    updateAveragePredicted();
+  }
 
   if(!user) {
     if(fetchUserFromCookies() !== null) 
@@ -111,6 +118,20 @@ const App = () => {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (teamStructure === null) {
+      const fetchTeam = async () => {
+        try {
+          const response = await axios.get(`http://localhost:3000/api/team-structure/${user}`);
+          setTeamStructure(response.data);
+        } catch (error) {
+          console.error('Error fetching team structure:', error);
+        }
+      };
+      fetchTeam();
+    }
+  });
 
   if (loading) {
     return <div>Loading...</div>;
@@ -147,6 +168,7 @@ const App = () => {
       </div>
       <div style={{ display: "flex", gap: "16px" }}>
         <PositionAverageTable positionAverages={averagePredicted} />  
+        <TeamStructure teamStructure={teamStructure} onUpdate={updateTeamStucture} />
         {/* There should be a thing here that customises positions/player numbers, maybe in a table */}
       </div>   
       <div className="tables-container">

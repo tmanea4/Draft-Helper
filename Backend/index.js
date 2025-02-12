@@ -185,5 +185,53 @@ app.put('/api/rows/:id/:table', async (req, res) => {
   }
 });
 
+app.get('/api/team-structure/:username', async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    // Check if user exists
+    const checkQuery = `SELECT * FROM teamstructures WHERE username = $1;`;
+    const checkResult = await client.query(checkQuery, [username]);
+
+    if (checkResult.rows.length === 0) {
+      // Insert new user if not found
+      const insertQuery = `INSERT INTO teamstructures (username) VALUES ($1) RETURNING *;`;
+      const insertResult = await client.query(insertQuery, [username]);
+      return res.json(insertResult.rows[0]); // Return the new user
+    }
+    res.json(checkResult.rows[0]); // Return existing user
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.put('/api/team-structure/:username', async (req, res) => {
+  const { username } = req.params;
+  const { players, forwards, midfielders, defenders, rucks } = req.body;
+
+  try {
+    const query = `
+      UPDATE teamstructures 
+      SET players = $1, forwards = $2, midfielders = $3, defenders = $4, rucks = $5
+      WHERE username = $6
+      RETURNING *;
+    `;
+    
+    const values = [players, forwards, midfielders, defenders, rucks, username];
+    const result = await client.query(query, values);
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(result.rows[0]); // Return the updated row
+  } catch (error) {
+    console.error('Error updating team structure:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 
 app.listen(3000, () => console.log(`App running on port 3000.`));

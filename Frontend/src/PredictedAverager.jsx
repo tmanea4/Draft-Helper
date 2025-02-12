@@ -1,12 +1,12 @@
 
-export default function PredictedAverager(rowData)
+export default function PredictedAverager(rowData, teamStructure) 
 {
     const testing = {};
 
-    testing.def = getAverage(rowData, 'def', 48);
-    testing.mid = getAverage(rowData, 'mid', 64);
-    testing.ruck = getAverage(rowData, 'ruck', 8);
-    testing.fwd = getAverage(rowData, 'fwd', 48);
+    testing.def = getAverage(rowData, 'def', teamStructure.defenders * teamStructure.players);
+    testing.mid = getAverage(rowData, 'mid', teamStructure.midfielders * teamStructure.players);
+    testing.ruck = getAverage(rowData, 'ruck', teamStructure.rucks * teamStructure.players);
+    testing.fwd = getAverage(rowData, 'fwd', teamStructure.forwards * teamStructure.players);
 
     return testing;
 }
