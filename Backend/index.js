@@ -7,11 +7,11 @@ import cors from 'cors';
 const { Client } = pg;
 
 const client = new Client({
-  user: 'postgres',
-  host: 'db',
-  database: 'postgres',
-  password: '1234',
-  port: 5432,
+  user: process.env.DB_USER || 'postgres',
+  host: process.env.DB_HOST || 'db',
+  database: process.env.DB_NAME || 'postgres',
+  password: process.env.DB_PASSWORD || '1234',
+  port: process.env.DB_PORT || 5432,
 });
 
 client.connect();
@@ -36,7 +36,7 @@ app.get('/api/rows/:table', (req, res) => {
   console.log('Table:', table);
   console.log('Request:', req.params);
   // const query = `SELECT * FROM players`;
-
+  
   const query = `SELECT 
   p.id, 
   p.name,
@@ -48,7 +48,7 @@ app.get('/api/rows/:table', (req, res) => {
   COALESCE(u.drafted, p.drafted) AS drafted, 
   COALESCE(u.ignored, p.ignored) AS ignored
 FROM players p
-LEFT JOIN tmanea4 u ON p.id = u.id;`;
+LEFT JOIN ${table} u ON p.id = u.id;`;
 
   client.query(query, (err, results) => {
     if (err) {
@@ -119,7 +119,7 @@ app.put('/api/createtable/:table', async (req, res) => {
     const sanitizedTable = table.replace(/[^a-zA-Z0-9_]/g, '');
     const createTableQuery = `
       CREATE TABLE IF NOT EXISTS ${sanitizedTable} (
-        id SERIAL PRIMARY KEY,
+        id INT PRIMARY KEY,
         predicted FLOAT,
         drafted INT DEFAULT 0,
         ignored INT DEFAULT 0

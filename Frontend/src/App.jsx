@@ -10,6 +10,7 @@ import DraftList from './DraftList';
 import NavBar from './NavBar';
 import PredictedAverager from './PredictedAverager';
 import TeamStructure from './TeamStructure';
+import FlexPos from './FlexPos';
 
 import './App.css';
 
@@ -75,11 +76,13 @@ const App = () => {
   }
 
   const testDbExists = async (user) => {
+    console.log("testing123312312");
     const response = await axios.get(`http://localhost:3000/api/testtable/${user}`); 
     setDbExists(response.data);
   }
 
   const createTable = async (user) => {
+    console.log("testing123312312");
     const response = await axios.put(`http://localhost:3000/api/createtable/${user}`); 
   }
 
@@ -169,6 +172,7 @@ const App = () => {
       <div style={{ display: "flex", gap: "16px" }}>
         <PositionAverageTable positionAverages={averagePredicted} />  
         <TeamStructure teamStructure={teamStructure} onUpdate={updateTeamStucture} />
+        <FlexPos flexname={averagePredicted}/>  
         {/* There should be a thing here that customises positions/player numbers, maybe in a table */}
       </div>   
       <div className="tables-container">

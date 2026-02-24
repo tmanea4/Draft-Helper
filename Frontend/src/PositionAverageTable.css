@@ -20,3 +20,20 @@
     background-color: #f2f2f2; /* Optional: Add background color to table headers */
   }
   
+.pos-avg-table2 {
+    border-collapse: collapse; /* Collapse table borders to avoid double borders */
+    margin-left: 1%;
+    width: 200px;
+    margin-bottom: 10px;
+  }
+  
+  .pos-avg-table2 th,
+  .pos-avg-table2 td {
+    border: 1px solid #ddd; /* Add borders to table headers and cells */
+    padding: 8px; /* Add padding to improve readability */
+    text-align: center; /* Align text to the left within cells */
+  }
+  
+  .pos-avg-table2 th {
+    background-color: #f2f2f2; /* Optional: Add background color to table headers */
+  }
